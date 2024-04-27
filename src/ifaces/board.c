@@ -26,11 +26,14 @@
 
 void gpioInit(void)
 {
+
     // LED
-    gpio_set_dir(25, GPIO_IN);
-    gpio_put(25, 0);
-    gpio_set_function(25, GPIO_FUNC_SIO);
-    gpio_set_dir(25, GPIO_OUT);
+    gpio_set_function(BOARD_LED_GPIO, GPIO_FUNC_SIO);
+    gpio_set_dir(BOARD_LED_GPIO, GPIO_OUT);
+    
+    // TEST GPIOs
+    gpio_set_function(TEST0_GPIO, GPIO_FUNC_SIO);
+    gpio_set_dir(TEST0_GPIO, GPIO_OUT);
 
     // PWM
     gpio_set_function(PWM1_A, GPIO_FUNC_PWM);

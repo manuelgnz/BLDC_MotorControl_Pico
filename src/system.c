@@ -157,4 +157,9 @@ static void timerInit(void)
     timer_hw->alarm[ALARM_NUM] = timer_hw->timerawl + FOC_PERIOD;
 }
 
+static void adcInit(void)
+{
+    
+}
+
 /* ------------------------------- End of file ------------------------------ */

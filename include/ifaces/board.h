@@ -25,13 +25,17 @@
 #define UART_TX_PIN (12U)
 #define UART_RX_PIN (13U)
 
+/** Test GPIO. */
+#define TEST0_GPIO      (21U)
+
+/** Board built-in LED gpio. */
+#define BOARD_LED_GPIO  (25U)
+
+
 
 /* ---------------------------------- Types --------------------------------- */
 
 /* ------------------------------- Public data ------------------------------ */
-
-/** Template public variable. */
-extern int templateData1;
 
 /* ------------------------- Public code prototypes ------------------------- */
 

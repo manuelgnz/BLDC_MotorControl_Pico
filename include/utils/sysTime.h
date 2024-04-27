@@ -12,14 +12,36 @@
 
 /* -------------------------------- Includes -------------------------------- */
 
+#include <pico/stdlib.h>
+
 /* -------------------------- Constants and macros -------------------------- */
 
+/** Size of the time counters array. */
+#define TIME_COUNTERS_SIZE   10U                    
+
 /* ---------------------------------- Types --------------------------------- */
+
+/** @brief Delay timer struct. */
+typedef struct
+{
+    uint64_t previousTime;
+    uint64_t currentTime;
+    uint64_t interval;
+} delay_t;
 
 /* ------------------------------- Public data ------------------------------ */
 
 /* ------------------------- Public code prototypes ------------------------- */
 
+/**
+ * 
+*/
+delay_t * delayInit(delay_t * delay, uint64_t time);
+
+/**
+ * 
+*/
+uint16_t delayElapsedTime(delay_t * delay);
 
 #endif // SYSTIME_H
 
