@@ -9,10 +9,18 @@ pico_sdk_init()
 add_executable(bldcMC
                 src/main.c
                 src/system.c
+                src/ifaces/board.c
+                src/ifaces/foc.c
+                src/console/debug.c
 )
 
-target_link_libraries(bldcMC pico_stdlib)
+target_link_libraries(bldcMC pico_stdlib hardware_pwm hardware_clocks) # pull in common dependencies and additional pwm hardware support
 
-target_include_directories(bldcMC PRIVATE ./include)
+target_include_directories(bldcMC PRIVATE
+                ./include
+                ./include/ifaces
+                ./include/utils
+                ./include/console
+)
 
 pico_add_extra_outputs(bldcMC)
