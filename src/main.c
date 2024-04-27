@@ -10,8 +10,10 @@
 /* -------------------------------- Includes -------------------------------- */
 
 #include <pico/stdlib.h>
+#include <stdio.h>
 #include <hardware/pwm.h>
 #include <system.h>
+#include <debug.h>
 
 /* -------------------------- Constants and macros -------------------------- */
 
@@ -23,8 +25,8 @@ int main(void)
 
     gpio_init(25);
     gpio_set_dir(25, GPIO_OUT);
-
-    setPwmDutyCycle(bldcSystem.pwmSlices.pwm1Slice, 0.5f);
+    
+    setPwmDutyCycle(bldcSystem.pwmSlices.pwm1Slice, 0.8f);
     setPwmDutyCycle(bldcSystem.pwmSlices.pwm2Slice, 0.5f);
     setPwmDutyCycle(bldcSystem.pwmSlices.pwm3Slice, 0.5f);
     setPwmDutyCycle(bldcSystem.pwmSlices.pwmDac1Slice, 0.5f);
@@ -33,6 +35,13 @@ int main(void)
     //Infinite loop
     while(1)
     {
+        uint64_t ticks = time_us_64();
+
+        char s[20U];
+        sprintf(s, "Ticks: %llu \r\n", ticks);
+        // Send out a string, with CR/LF conversions
+        uart_puts(UART_ID, s);
+
         gpio_put(25, 1);
         sleep_ms(500);
         gpio_put(25,0);

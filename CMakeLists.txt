@@ -12,9 +12,10 @@ add_executable(bldcMC
                 src/ifaces/board.c
                 src/ifaces/foc.c
                 src/console/debug.c
+                src/utils/sysTime.c
 )
 
-target_link_libraries(bldcMC pico_stdlib hardware_pwm hardware_clocks) # pull in common dependencies and additional pwm hardware support
+target_link_libraries(bldcMC pico_stdlib pico_stdio hardware_pwm hardware_clocks) # pull in common dependencies and additional pwm hardware support
 
 target_include_directories(bldcMC PRIVATE
                 ./include

@@ -22,6 +22,9 @@
 #define PWM3_B      (5U)
 #define PWM_DAC_1   (6U)
 #define PWM_DAC_2   (7U)
+#define UART_TX_PIN (12U)
+#define UART_RX_PIN (13U)
+
 
 /* ---------------------------------- Types --------------------------------- */
 

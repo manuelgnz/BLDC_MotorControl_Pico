@@ -13,12 +13,13 @@
 #include <board.h>
 #include <pico/stdlib.h>
 #include <hardware/pwm.h>
-#include "hardware/pll.h"
-#include "hardware/timer.h"
-#include "hardware/clocks.h"
-#include "hardware/structs/pll.h"
-#include "hardware/structs/clocks.h"
+#include <hardware/pll.h>
+#include <hardware/timer.h>
+#include <hardware/clocks.h>
+#include <hardware/structs/pll.h>
+#include <hardware/structs/clocks.h>
 #include <foc.h>
+#include <debug.h>
 
 /* -------------------------- Constants and macros -------------------------- */
 
@@ -27,11 +28,6 @@
 
 /** PWM DAC frequency in kHz. */
 #define DAC_PWM_FREQUENCY       60  // 60 kHz (150 in HURJET)
-
-#define BAUD_RATE 115200
-#define DATA_BITS 8
-#define STOP_BITS 1
-#define PARITY    UART_PARITY_NONE
 
 /* ---------------------------------- Types --------------------------------- */
 
@@ -84,7 +80,23 @@ void setPwmDutyCycle(uint8_t slice, float dutyCycle)
 static void uartInit(void)
 {
     // Set up our UART with a basic baud rate.
-    uart_init(uart0, BAUD_RATE);
+    uart_init(UART_ID, BAUD_RATE);
+
+    // Set UART flow control CTS/RTS, we don't want these, so turn them off
+    uart_set_hw_flow(UART_ID, false, false);
+
+    // Set our data format
+    uart_set_format(UART_ID, DATA_BITS, STOP_BITS, PARITY);
+
+    // Set up a RX interrupt. Select correct interrupt for the UART we are using
+    int UART_IRQ = UART_ID == uart0 ? UART0_IRQ : UART1_IRQ;
+
+    // Set up and enable the interrupt handlers
+    irq_set_exclusive_handler(UART_IRQ, uartRxIsr);
+    irq_set_enabled(UART_IRQ, true);
+
+    // Enable the UART to send interrupts - RX only
+    uart_set_irq_enables(UART_ID, true, false);
 }
 
 static void pwmInit(void)
@@ -102,7 +114,7 @@ static void pwmInit(void)
         .top = 0
     };
 
-    // uint32_t clkSysFreq = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLK_SYS);
+    // uint32_t clkSysFreq = frequency_count_khz(CLOCKS_FC0_SRC_VALUE_CLK_SYS); TODO
     uint32_t clkSysFreq = 125000;
 
     // PWM Motor Phases

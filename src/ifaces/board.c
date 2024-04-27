@@ -41,6 +41,10 @@ void gpioInit(void)
     gpio_set_function(PWM3_B, GPIO_FUNC_PWM);
     gpio_set_function(PWM_DAC_1, GPIO_FUNC_PWM);
     gpio_set_function(PWM_DAC_2, GPIO_FUNC_PWM);
+
+    // UART
+    gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
+    gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
 }
 
 /* ------------------------------ Private code ------------------------------ */
