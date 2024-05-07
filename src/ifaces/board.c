@@ -11,6 +11,7 @@
 
 #include <board.h>
 #include <pico/stdlib.h>
+#include "hardware/adc.h"
 
 /* -------------------------- Constants and macros -------------------------- */
 
@@ -36,18 +37,22 @@ void gpioInit(void)
     gpio_set_dir(TEST0_GPIO, GPIO_OUT);
 
     // PWM
-    gpio_set_function(PWM1_A, GPIO_FUNC_PWM);
-    gpio_set_function(PWM1_B, GPIO_FUNC_PWM);
-    gpio_set_function(PWM2_A, GPIO_FUNC_PWM);
-    gpio_set_function(PWM2_B, GPIO_FUNC_PWM);
-    gpio_set_function(PWM3_A, GPIO_FUNC_PWM);
-    gpio_set_function(PWM3_B, GPIO_FUNC_PWM);
-    gpio_set_function(PWM_DAC_1, GPIO_FUNC_PWM);
-    gpio_set_function(PWM_DAC_2, GPIO_FUNC_PWM);
+    gpio_set_function(PWM1_A_GPIO, GPIO_FUNC_PWM);
+    gpio_set_function(PWM1_B_GPIO, GPIO_FUNC_PWM);
+    gpio_set_function(PWM2_A_GPIO, GPIO_FUNC_PWM);
+    gpio_set_function(PWM2_B_GPIO, GPIO_FUNC_PWM);
+    gpio_set_function(PWM3_A_GPIO, GPIO_FUNC_PWM);
+    gpio_set_function(PWM3_B_GPIO, GPIO_FUNC_PWM);
+    gpio_set_function(PWM_DAC_1_GPIO, GPIO_FUNC_PWM);
+    gpio_set_function(PWM_DAC_2_GPIO, GPIO_FUNC_PWM);
 
     // UART
-    gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
-    gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
+    gpio_set_function(UART_TX_GPIO, GPIO_FUNC_UART);
+    gpio_set_function(UART_RX_GPIO, GPIO_FUNC_UART);
+
+    // ADC
+    adc_gpio_init(PHASE_A_CURRENT_GPIO);
+    adc_gpio_init(PHASE_B_CURRENT_GPIO);
 }
 
 /* ------------------------------ Private code ------------------------------ */

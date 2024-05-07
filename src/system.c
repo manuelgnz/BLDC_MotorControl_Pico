@@ -16,6 +16,8 @@
 #include <hardware/pll.h>
 #include <hardware/timer.h>
 #include <hardware/clocks.h>
+#include <hardware/resets.h>
+#include <hardware/adc.h>
 #include <hardware/structs/pll.h>
 #include <hardware/structs/clocks.h>
 #include <foc.h>
@@ -57,6 +59,11 @@ static void pwmInit(void);
  */
 static void timerInit(void);
 
+/**
+ * @brief Adc peripheral init.
+*/
+static void adcInit(void);
+
 /* ------------------------------- Public code ------------------------------ */
 
 void systemInit(void)
@@ -65,6 +72,7 @@ void systemInit(void)
     uartInit();
     pwmInit();
     timerInit();
+    adcInit();
 }
 
 void setPwmDutyCycle(uint8_t slice, float dutyCycle)
@@ -101,11 +109,11 @@ static void uartInit(void)
 
 static void pwmInit(void)
 {
-    bldcSystem.pwmSlices.pwm1Slice = pwm_gpio_to_slice_num(PWM1_A);
-    bldcSystem.pwmSlices.pwm2Slice = pwm_gpio_to_slice_num(PWM2_A);
-    bldcSystem.pwmSlices.pwm3Slice = pwm_gpio_to_slice_num(PWM3_A);
-    bldcSystem.pwmSlices.pwmDac1Slice = pwm_gpio_to_slice_num(PWM_DAC_1);
-    bldcSystem.pwmSlices.pwmDac2Slice = pwm_gpio_to_slice_num(PWM_DAC_2);
+    bldcSystem.pwmSlices.pwm1Slice = pwm_gpio_to_slice_num(PWM1_A_GPIO);
+    bldcSystem.pwmSlices.pwm2Slice = pwm_gpio_to_slice_num(PWM2_A_GPIO);
+    bldcSystem.pwmSlices.pwm3Slice = pwm_gpio_to_slice_num(PWM3_A_GPIO);
+    bldcSystem.pwmSlices.pwmDac1Slice = pwm_gpio_to_slice_num(PWM_DAC_1_GPIO);
+    bldcSystem.pwmSlices.pwmDac2Slice = pwm_gpio_to_slice_num(PWM_DAC_2_GPIO);
 
     pwm_config config =
     {
@@ -159,7 +167,21 @@ static void timerInit(void)
 
 static void adcInit(void)
 {
-    
+    adc_init();
+    // // ADC is in an unknown state. We should start by resetting it
+    // reset_block(RESETS_RESET_ADC_BITS);
+    // unreset_block_wait(RESETS_RESET_ADC_BITS);
+
+    // // Now turn it back on. Staging of clock etc is handled internally
+    // adc_hw->cs = ADC_CS_EN_BITS;
+
+    // // Internal staging completes in a few cycles, but poll to be sure
+    // while (!(adc_hw->cs & ADC_CS_READY_BITS)) {
+    //     tight_loop_contents();
+    // }
+	
+	// Enable temp sensor
+	// hw_set_bits(&adc_hw->cs, ADC_CS_TS_EN_BITS);
 }
 
 /* ------------------------------- End of file ------------------------------ */

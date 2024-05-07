@@ -14,16 +14,18 @@
 
 /* -------------------------- Constants and macros -------------------------- */
 
-#define PWM1_A      (0U)
-#define PWM1_B      (1U)
-#define PWM2_A      (2U)
-#define PWM2_B      (3U)
-#define PWM3_A      (4U)
-#define PWM3_B      (5U)
-#define PWM_DAC_1   (6U)
-#define PWM_DAC_2   (7U)
-#define UART_TX_PIN (12U)
-#define UART_RX_PIN (13U)
+#define PWM1_A_GPIO           (0U)
+#define PWM1_B_GPIO           (1U)
+#define PWM2_A_GPIO           (2U)
+#define PWM2_B_GPIO           (3U)
+#define PWM3_A_GPIO           (4U)
+#define PWM3_B_GPIO           (5U)
+#define PWM_DAC_1_GPIO        (6U)
+#define PWM_DAC_2_GPIO        (7U)
+#define UART_TX_GPIO          (12U)
+#define UART_RX_GPIO          (13U)
+#define PHASE_A_CURRENT_GPIO  (26U)
+#define PHASE_B_CURRENT_GPIO  (27U)
 
 /** Test GPIO. */
 #define TEST0_GPIO      (21U)
