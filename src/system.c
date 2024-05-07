@@ -22,6 +22,7 @@
 #include <hardware/structs/clocks.h>
 #include <foc.h>
 #include <debug.h>
+#include <bldcAdc.h>
 
 /* -------------------------- Constants and macros -------------------------- */
 
@@ -30,6 +31,28 @@
 
 /** PWM DAC frequency in kHz. */
 #define DAC_PWM_FREQUENCY       60  // 60 kHz (150 in HURJET)
+
+/** ADC internal temperature sensor ADC channel. */
+#define ADC_TEMP_CH (4)
+
+/** Value to enable ADC raw value to FIFO transfer when measurement is completed. */
+#define ADC_FIFO_TRANSFER_ENABLE      (true)
+
+/** Value to disable ADC raw value to FIFO transfer when measurement is completed. */
+#define ADC_FIFO_TRANSFER_DISABLE     (false)
+
+/** Value to disable DMA request from FIFO when measurement is completed. */
+#define ADC_FIFO_DMA_REQUEST_DISABLE  (false)
+
+/** FIFO fill threshold to trigger ADC FIFO ISR. */
+#define ADC_FIFO_INTERRUPT_THRESHOLD  (1U)
+
+/** Value to disable error flag bits inclusion in ADC raw value when measurement
+ * is completed. */
+#define ADC_ERROR_FLAGS_DISABLE       (false)
+
+/** Value to disable bits shift of ADC raw value when measurement is completed. */
+#define ADC_RESULT_BIT_SHIFT_DISABLE  (false)
 
 /* ---------------------------------- Types --------------------------------- */
 
@@ -168,18 +191,13 @@ static void timerInit(void)
 static void adcInit(void)
 {
     adc_init();
-    // // ADC is in an unknown state. We should start by resetting it
-    // reset_block(RESETS_RESET_ADC_BITS);
-    // unreset_block_wait(RESETS_RESET_ADC_BITS);
 
-    // // Now turn it back on. Staging of clock etc is handled internally
-    // adc_hw->cs = ADC_CS_EN_BITS;
+    adc_select_input(PHASE_A_CURRENT_GPIO - 26U);
+    adc_fifo_setup(ADC_FIFO_TRANSFER_ENABLE, ADC_FIFO_DMA_REQUEST_DISABLE, ADC_FIFO_INTERRUPT_THRESHOLD, ADC_ERROR_FLAGS_DISABLE, ADC_RESULT_BIT_SHIFT_DISABLE);
+    irq_set_exclusive_handler(ADC_IRQ_FIFO, adcIsr);
+    adc_irq_set_enabled(true);
+    irq_set_enabled(ADC_IRQ_FIFO, true);
 
-    // // Internal staging completes in a few cycles, but poll to be sure
-    // while (!(adc_hw->cs & ADC_CS_READY_BITS)) {
-    //     tight_loop_contents();
-    // }
-	
 	// Enable temp sensor
 	// hw_set_bits(&adc_hw->cs, ADC_CS_TS_EN_BITS);
 }

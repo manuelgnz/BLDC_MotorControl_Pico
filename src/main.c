@@ -17,6 +17,7 @@
 #include <debug.h>
 #include <sysTime.h>
 #include <board.h>
+#include <bldcAdc.h>
 
 /* -------------------------- Constants and macros -------------------------- */
 
@@ -44,16 +45,17 @@ int main(void)
     {
         if (delayElapsedTime(&delayCycle1))
         {
-            gpio_xor_mask(1 << TEST0_GPIO);
+            // gpio_xor_mask(1 << TEST0_GPIO);
         }
 
         if (delayElapsedTime(&delayCycle2))
         {
             uint64_t ticks = time_us_64();
-            adc_select_input(PHASE_A_CURRENT_GPIO - 26U);
-            uint16_t adc26 = adc_read();
-            adc_select_input(PHASE_B_CURRENT_GPIO - 26U);
-            uint16_t adc27 = adc_read();    
+            // adc_select_input(PHASE_A_CURRENT_GPIO - 26U);
+            // adc26 = adc_read();
+            // adc_select_input(PHASE_B_CURRENT_GPIO - 26U);
+            // adc27 = adc_read();
+            adcSwTrigger();    
 
             char s[120U];
             sprintf(s, "Ticks: %llu | ADC(26): %hu | ADC(27): %hu \r\n", ticks, adc26, adc27);

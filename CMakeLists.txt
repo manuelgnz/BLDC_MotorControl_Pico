@@ -13,6 +13,7 @@ add_executable(bldcMC
                 src/ifaces/foc.c
                 src/console/debug.c
                 src/utils/sysTime.c
+                src/peripherals/bldcAdc.c
 )
 
 target_link_libraries(bldcMC pico_stdlib pico_stdio hardware_pwm hardware_clocks hardware_adc) # pull in common dependencies and additional pwm hardware support
@@ -22,6 +23,7 @@ target_include_directories(bldcMC PRIVATE
                 ./include/ifaces
                 ./include/utils
                 ./include/console
+                ./include/peripherals
 )
 
 pico_add_extra_outputs(bldcMC)
