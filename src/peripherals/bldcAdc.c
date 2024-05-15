@@ -38,6 +38,7 @@ void adcSwTrigger(void)
 
 void adcIsr(void)
 {
+    #ifndef ADC_BLOCKING
     static uint8_t nextAdc = 0U;
     
     if (nextAdc == 0U)
@@ -54,6 +55,7 @@ void adcIsr(void)
     nextAdc ^= 1U;    
 
     gpio_xor_mask(1 << TEST0_GPIO);
+    #endif
 }
 
 /* ------------------------------ Private code ------------------------------ */

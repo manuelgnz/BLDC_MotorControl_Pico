@@ -43,6 +43,11 @@ delay_t * delayInit(delay_t * delay, uint64_t time);
 */
 uint16_t delayElapsedTime(delay_t * delay);
 
+/**
+ * 
+*/
+void delayEnd(delay_t * delay);
+
 #endif // SYSTIME_H
 
 /* ------------------------------- End of file ------------------------------ */

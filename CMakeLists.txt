@@ -12,7 +12,9 @@ add_executable(bldcMC
                 src/ifaces/board.c
                 src/ifaces/foc.c
                 src/console/debug.c
+                src/console/trace.c
                 src/utils/sysTime.c
+                src/utils/utils.c
                 src/peripherals/bldcAdc.c
 )
 
@@ -24,6 +26,7 @@ target_include_directories(bldcMC PRIVATE
                 ./include/utils
                 ./include/console
                 ./include/peripherals
+                ./include/math_blocks
 )
 
 pico_add_extra_outputs(bldcMC)
