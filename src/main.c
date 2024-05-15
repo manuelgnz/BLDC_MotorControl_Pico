@@ -29,6 +29,8 @@ int main(void)
 {
     systemInit();
 
+    debugInit();
+
     setPwmDutyCycle(bldcSystem.pwmSlices.pwm1Slice, 0.1f);
     setPwmDutyCycle(bldcSystem.pwmSlices.pwm2Slice, 0.5f);
     setPwmDutyCycle(bldcSystem.pwmSlices.pwm3Slice, 0.5f);
@@ -45,27 +47,26 @@ int main(void)
     {
         if (delayElapsedTime(&delayCycle1))
         {
-            // gpio_xor_mask(1 << TEST0_GPIO);
+            /* do nothing */
         }
 
         if (delayElapsedTime(&delayCycle2))
         {
             uint64_t ticks = time_us_64();
-            // adc_select_input(PHASE_A_CURRENT_GPIO - 26U);
-            // adc26 = adc_read();
-            // adc_select_input(PHASE_B_CURRENT_GPIO - 26U);
-            // adc27 = adc_read();
+
+            #ifdef ADC_BLOCKING
+            adc_select_input(PHASE_A_CURRENT_GPIO - 26U);
+            adc26 = adc_read();
+            adc_select_input(PHASE_B_CURRENT_GPIO - 26U);
+            adc27 = adc_read();
+            #else
             adcSwTrigger();    
-
-            char s[120U];
-            sprintf(s, "Ticks: %llu | ADC(26): %hu | ADC(27): %hu \r\n", ticks, adc26, adc27);
-            
-            // Send out a string, with CR/LF conversions
-            uart_puts(UART_ID, s);
-
+            #endif
             // Toggle LED
             gpio_xor_mask(1 << BOARD_LED_GPIO);
         }
+
+        debugInfo(&sciHandler);
     }    
 }
 

@@ -54,6 +54,11 @@ uint16_t delayElapsedTime(delay_t * delay)
     return (hasDelayElapsed);
 }
 
+void delayEnd(delay_t * delay)
+{
+    delay->previousTime = time_us_64() - delay->interval;
+}
+
 /* ------------------------------ Private code ------------------------------ */
 
 

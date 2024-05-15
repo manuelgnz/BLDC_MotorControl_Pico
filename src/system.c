@@ -23,6 +23,7 @@
 #include <foc.h>
 #include <debug.h>
 #include <bldcAdc.h>
+#include <trace.h>
 
 /* -------------------------- Constants and macros -------------------------- */
 
@@ -30,10 +31,10 @@
 #define MOTOR_PWM_FREQUENCY     10U  // 10 kHz
 
 /** PWM DAC frequency in kHz. */
-#define DAC_PWM_FREQUENCY       60  // 60 kHz (150 in HURJET)
+#define DAC_PWM_FREQUENCY       60U  // 60 kHz
 
 /** ADC internal temperature sensor ADC channel. */
-#define ADC_TEMP_CH (4)
+#define ADC_TEMP_CH (4U)
 
 /** Value to enable ADC raw value to FIFO transfer when measurement is completed. */
 #define ADC_FIFO_TRANSFER_ENABLE      (true)
@@ -93,6 +94,7 @@ void systemInit(void)
 {
     gpioInit();
     uartInit();
+    traceInit(&sciHandler);
     pwmInit();
     timerInit();
     adcInit();
@@ -110,6 +112,21 @@ void setPwmDutyCycle(uint8_t slice, float dutyCycle)
 
 static void uartInit(void)
 {
+
+    sciHandler.regs = UART_ID;
+    
+    sciHandler.rxBuffer.data = halSciRxBuffer;
+    sciHandler.rxBuffer.dataLength = SCI_RX_BUFFER_LEN;
+    sciHandler.rxBuffer.first = 0U;
+    sciHandler.rxBuffer.last = 0U;
+    sciHandler.rxBuffer.count = 0U;
+
+    sciHandler.txBuffer.data = halSciTxBuffer;
+    sciHandler.txBuffer.dataLength = SCI_TX_BUFFER_LEN;
+    sciHandler.txBuffer.first = 0U;
+    sciHandler.txBuffer.last = 0U;
+    sciHandler.txBuffer.count = 0U;
+
     // Set up our UART with a basic baud rate.
     uart_init(UART_ID, BAUD_RATE);
 
@@ -122,12 +139,12 @@ static void uartInit(void)
     // Set up a RX interrupt. Select correct interrupt for the UART we are using
     int UART_IRQ = UART_ID == uart0 ? UART0_IRQ : UART1_IRQ;
 
-    // Set up and enable the interrupt handlers
+    // Set up and disable the interrupt handlers
     irq_set_exclusive_handler(UART_IRQ, uartRxIsr);
-    irq_set_enabled(UART_IRQ, true);
+    irq_set_enabled(UART_IRQ, false);
 
-    // Enable the UART to send interrupts - RX only
-    uart_set_irq_enables(UART_ID, true, false);
+    // Disable the UART to send interrupts
+    uart_set_irq_enables(UART_ID, false, false);
 }
 
 static void pwmInit(void)
