@@ -96,6 +96,11 @@ void sciSendFlush(halSciHandler_t * handler, bool all)
             {
                 charactersToSend = SINGLE_SEND_MAX_CHARACTERS_NUM;
             }
+
+            if ((txBuffer->first + charactersToSend) > SCI_TX_BUFFER_LEN)
+            {
+                charactersToSend = SCI_TX_BUFFER_LEN - txBuffer->first;
+            }
             
             // Write the characters
             uart_write_blocking(handler->regs, &txBuffer->data[txBuffer->first], charactersToSend);
